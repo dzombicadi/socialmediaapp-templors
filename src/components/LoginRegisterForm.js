@@ -2,49 +2,39 @@ import "../styles/LoginRegisterForm.css";
 import "../global.css";
 
 import "bootstrap/dist/css/bootstrap.min.css";
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState } from "react";
 import { Form, Button, Container, Row, Col } from "react-bootstrap";
 
-<<<<<<< HEAD
 import { Outlet, Link } from "react-router-dom";
+
 import { loginUser } from "../authutils.ts";
-=======
-import { Link } from "react-router-dom";
->>>>>>> e3a628a4a78fd86e923f8e8ba2b56bd4eb1b152c
 
 function LoginRegisterForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
 
-  const handleSubmit = useCallback(
+  const validateForm = () => {
+    const newErrors = {};
+    if (!email) newErrors.email = "Email is required";
+    else if (!/\S+@\S+\.\S+/.test(email)) newErrors.email = "Email is invalid";
+    if (!password) newErrors.password = "Password is required";
+    else if (password.length < 6)
+      newErrors.password = "Password must be at least 6 characters";
+    return newErrors;
+  };
 
-    async event => {
-      event.preventDefault();
-
-      const validateForm = () => {
-        const newErrors = {};
-        if (!email) newErrors.email = "Email is required";
-        else if (!/\S+@\S+\.\S+/.test(email)) newErrors.email = "Email is invalid";
-        if (!password) newErrors.password = "Password is required";
-        else if (password.length < 6)
-          newErrors.password = "Password must be at least 6 characters";
-        return newErrors;
-      };
-      const formErrors = validateForm();
-      
-      if (Object.keys(formErrors).length > 0) {
-        setErrors(formErrors);
-      } else {
-        setErrors({});
-        console.log("Login attempted with:", { email, password });
-        await loginUser(email, password)
-        .then((userCred) => console.log(userCred.user.email))
-        .catch((err) => {
-          console.log("Error on login: " + err);
-        })
-      }
-  }, [email, password]);
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const formErrors = validateForm();
+    if (Object.keys(formErrors).length > 0) {
+      setErrors(formErrors);
+    } else {
+      setErrors({});
+      console.log("Login attempted with:", { email, password });
+      // Here you would typically send a request to your server
+    }
+  };
 
   return (
     <div className="main">

@@ -9,16 +9,11 @@ import FeedPage from "./components/FeedPage";
 import NavBarFeed from "./components/NavBarFeed";
 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { AuthProvider } from "./contexts/AuthContext.tsx";
 
 function App() {
   return (
     <div className="App">
-<<<<<<< HEAD
       <NavBar></NavBar>
-      <AuthProvider>
-=======
->>>>>>> e3a628a4a78fd86e923f8e8ba2b56bd4eb1b152c
       <BrowserRouter>
         <Routes>
           <Route
@@ -50,7 +45,6 @@ function App() {
           ></Route>
         </Routes>
       </BrowserRouter>
-      </AuthProvider>
     </div>
   );
 }

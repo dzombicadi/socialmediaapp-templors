@@ -2,47 +2,37 @@ import "../styles/RegisterForm.css";
 import "../global.css";
 
 import "bootstrap/dist/css/bootstrap.min.css";
-import React, { useCallback, useState } from "react";
-import { Form, Button } from "react-bootstrap";
+import React, { useEffect, useState } from "react";
+import { Form, Button, Container, Row, Col } from "react-bootstrap";
 
-import { Link } from "react-router-dom";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { firebaseAuth, firebaseFirestore } from "../configuration";
-import { doc, serverTimestamp, setDoc } from "firebase/firestore";
-import { createUser } from "../authutils";
+import { Outlet, Link } from "react-router-dom";
 
 function RegisterForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
 
-  const handleSubmit = useCallback(
+  const validateForm = () => {
+    const newErrors = {};
+    if (!email) newErrors.email = "Email is required";
+    else if (!/\S+@\S+\.\S+/.test(email)) newErrors.email = "Email is invalid";
+    if (!password) newErrors.password = "Password is required";
+    else if (password.length < 6)
+      newErrors.password = "Password must be at least 6 characters";
+    return newErrors;
+  };
 
-    async event => {
-      event.preventDefault();
-
-      const validateForm = () => {
-        const newErrors = {};
-        if (!email) newErrors.email = "Email is required";
-        else if (!/\S+@\S+\.\S+/.test(email)) newErrors.email = "Email is invalid";
-        if (!password) newErrors.password = "Password is required";
-        else if (password.length < 6)
-          newErrors.password = "Password must be at least 6 characters";
-        return newErrors;
-      };
-      const formErrors = validateForm();
-      
-      if (Object.keys(formErrors).length > 0) {
-        setErrors(formErrors);
-      } else {
-        setErrors({});
-        console.log("Login attempted with:", { email, password });
-        await createUser(email, password)
-        .catch((err) => {
-          console.log("Error on login: " + err);
-        })
-      }
-  }, [email, password]);
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const formErrors = validateForm();
+    if (Object.keys(formErrors).length > 0) {
+      setErrors(formErrors);
+    } else {
+      setErrors({});
+      console.log("Login attempted with:", { email, password });
+      // Here you would typically send a request to your server
+    }
+  };
 
   return (
     <div className="main">
