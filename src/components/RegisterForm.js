@@ -1,4 +1,4 @@
-import "../styles/LoginRegisterForm.css";
+import "../styles/RegisterForm.css";
 import "../global.css";
 
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -7,7 +7,7 @@ import { Form, Button, Container, Row, Col } from "react-bootstrap";
 
 import { Outlet, Link } from "react-router-dom";
 
-function LoginRegisterForm() {
+function RegisterForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
@@ -38,7 +38,7 @@ function LoginRegisterForm() {
     <div className="main">
       <div className="login-wrapper">
         <div className="login-form-container">
-          <h2 className="login-title">Login</h2>
+          <h2 className="login-title">Register</h2>
           <Form onSubmit={handleSubmit} className="login-form">
             <Form.Group className="mb-3" controlId="formBasicEmail">
               <Form.Label>Email address</Form.Label>
@@ -69,12 +69,12 @@ function LoginRegisterForm() {
             </Form.Group>
 
             <Button variant="primary" type="submit" className="login-button">
-              Login
+              Register
             </Button>
             <h6 className="sign-up-text">
-              No account?{" "}
-              <Link className="sign-up-link" to="/register">
-                Sign up
+              Already have an account?{" "}
+              <Link className="sign-up-link" to="/">
+                Login
               </Link>{" "}
               today!
             </h6>
@@ -85,4 +85,4 @@ function LoginRegisterForm() {
   );
 }
 
-export default LoginRegisterForm;
+export default RegisterForm;
