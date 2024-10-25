@@ -30,3 +30,13 @@
 .btn-flat {
   background-color: purple;
 }
+
+.custom-dropdown-toggle {
+  background-color: var(--blue-color); /* Your desired color */
+  border-color: var(--gray-color); /* Match the border */
+}
+
+.custom-dropdown-toggle:hover {
+  background-color: #0056b3; /* Hover color */
+  border-color: #0056b3; /* Match the border */
+}

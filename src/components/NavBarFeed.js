@@ -17,12 +17,14 @@ class NavBarFeed extends React.Component {
             <img src={signOut} alt="SignOut" className="nav-icon" />
           </a>
           <Dropdown>
-            <Dropdown.Toggle variant="success" id="dropdown-basic">
+            <Dropdown.Toggle
+              className="custom-dropdown-toggle"
+              id="dropdown-basic"
+            >
               <img
                 src={accountIcon}
                 alt="AccountDetails"
                 className="nav-icon"
-                variant="flat"
               />
             </Dropdown.Toggle>
 
