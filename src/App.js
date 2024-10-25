@@ -7,11 +7,13 @@ import RegisterForm from "./components/RegisterForm";
 import FeedPage from "./components/FeedPage";
 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { AuthProvider } from "./contexts/AuthContext.tsx";
 
 function App() {
   return (
     <div className="App">
       <NavBar></NavBar>
+      <AuthProvider>
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<LoginRegisterForm />}></Route>
@@ -19,6 +21,7 @@ function App() {
           <Route path="/feedpage" element={<FeedPage />}></Route>
         </Routes>
       </BrowserRouter>
+      </AuthProvider>
     </div>
   );
 }
