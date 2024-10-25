@@ -2,21 +2,3 @@
   margin: 0;
   padding: 0;
 }
-
-.App {
-  padding-left: 60px;
-  padding-right: 60px;
-  background-color: var(--gray-color);
-}
-
-.header {
-  padding-top: 10px;
-  padding-bottom: 10px;
-  background-color: var(--gray-color);
-}
-
-.header-logo {
-  background-color: var(--gray-color);
-  width: 225px;
-  height: 70px;
-}

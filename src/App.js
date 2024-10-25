@@ -1,15 +1,14 @@
 import "./App.css";
 import "./global.css";
-import logo from "./images/logo.png";
+
+import NavBar from "./components/NavBar";
+import LoginRegisterForm from "./components/LoginRegisterForm";
 
 function App() {
   return (
     <div className="App">
-      <header className="header">
-        <img src={logo} alt="Logo" className="header-logo" />
-      </header>
-
-      <div className="register-form"></div>
+      <NavBar></NavBar>
+      <LoginRegisterForm></LoginRegisterForm>
     </div>
   );
 }
