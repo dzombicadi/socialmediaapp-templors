@@ -5,7 +5,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useEffect, useState } from "react";
 import { Form, Button, Container, Row, Col } from "react-bootstrap";
 
-import { Outlet, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 function LoginRegisterForm() {
   const [email, setEmail] = useState("");

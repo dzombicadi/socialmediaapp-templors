@@ -1,6 +1,5 @@
 import "../styles/FeedPage.css";
 import React, { Component } from "react";
-import "../styles/NavBar-feed.css";
 
 import {
   Container,
@@ -35,6 +34,8 @@ const posts = [
     comments: 3,
   },
 ];
+
+const [postImage, setPostImage] = useState(null);
 
 class FeedPage extends React.Component {
   render() {
@@ -87,10 +88,18 @@ class FeedPage extends React.Component {
                   )}
                 </Card.Body>
                 <Card.Footer>
-                  <Button variant="outline-primary" className="mr-2">
+                  <Button
+                    id="button-like"
+                    variant="outline-primary"
+                    className="mr-2"
+                  >
                     Like ({post.likes})
                   </Button>
-                  <Button variant="outline-secondary" className="mr-2">
+                  <Button
+                    id="button-comment"
+                    variant="outline-secondary"
+                    className="mr-2"
+                  >
                     Comment ({post.comments})
                   </Button>
                   <Button variant="outline-success">Share</Button>
