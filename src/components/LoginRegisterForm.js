@@ -68,7 +68,7 @@ function LoginRegisterForm() {
               </Form.Control.Feedback>
             </Form.Group>
 
-            <Button variant="primary" type="submit" className="login-button">
+            <Button type="submit" className="login-button">
               Login
             </Button>
             <h6 className="sign-up-text">

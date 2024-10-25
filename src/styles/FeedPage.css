@@ -1,0 +1,23 @@
+.header {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  background-color: var(--gray-color);
+}
+
+.header-logo {
+  background-color: var(--gray-color);
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+  height: 70px;
+}
+
+.post-text {
+  text-align: center;
+  color: var(--gray-color);
+  text-decoration: underline;
+  text-decoration-color: var(--blue-color);
+  text-underline-offset: 15px;
+  padding-bottom: 5px;
+}
