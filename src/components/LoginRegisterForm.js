@@ -5,8 +5,12 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useEffect, useState, useCallback } from "react";
 import { Form, Button, Container, Row, Col } from "react-bootstrap";
 
+<<<<<<< HEAD
 import { Outlet, Link } from "react-router-dom";
 import { loginUser } from "../authutils.ts";
+=======
+import { Link } from "react-router-dom";
+>>>>>>> e3a628a4a78fd86e923f8e8ba2b56bd4eb1b152c
 
 function LoginRegisterForm() {
   const [email, setEmail] = useState("");

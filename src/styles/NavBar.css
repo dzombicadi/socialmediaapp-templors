@@ -10,4 +10,7 @@
   background-color: var(--gray-color);
   width: 225px;
   height: 70px;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
 }
