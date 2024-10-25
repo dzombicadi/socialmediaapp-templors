@@ -1,6 +1,5 @@
 import "../styles/FeedPage.css";
-import React, { Component } from "react";
-
+import React, { useState } from "react";
 import {
   Container,
   Row,
@@ -11,8 +10,7 @@ import {
   Form,
 } from "react-bootstrap";
 
-// examples
-const posts = [
+const initialPosts = [
   {
     id: 1,
     user: "John Doe",
@@ -21,7 +19,7 @@ const posts = [
     postImage: "https://via.placeholder.com/500",
     time: "2 hours ago",
     likes: 23,
-    comments: 5,
+    comments: [],
   },
   {
     id: 2,
@@ -31,86 +29,172 @@ const posts = [
     postImage: "",
     time: "5 hours ago",
     likes: 15,
-    comments: 3,
+    comments: [],
   },
 ];
 
-const [postImage, setPostImage] = useState(null);
+const FeedPage = () => {
+  const [posts, setPosts] = useState(initialPosts);
+  const [newPostContent, setNewPostContent] = useState("");
+  const [newPostImage, setNewPostImage] = useState(null);
+  const [newCommentContent, setNewCommentContent] = useState({});
 
-class FeedPage extends React.Component {
-  render() {
-    return (
-      <Container className="mt-4">
-        <Row>
-          <Col md={8} className="mx-auto">
-            <h2 className="mb-4 post-text">Here's what's new!</h2>
+  const handlePostChange = (event) => {
+    setNewPostContent(event.target.value);
+  };
 
-            {/* New Post Form */}
-            <Card className="mb-4">
+  // OVDJE NAPRAVITI FETCH IMENA, PREZIMENA I PORUKE
+  const handlePostSubmit = () => {
+    if (newPostContent || newPostImage) {
+      const newPost = {
+        id: posts.length + 1,
+        user: "Current User",
+        userImage: "https://via.placeholder.com/50",
+        content: newPostContent,
+        postImage: newPostImage,
+        time: "Just now",
+        likes: 0,
+        comments: [],
+      };
+      setPosts([newPost, ...posts]);
+      setNewPostContent("");
+      setNewPostImage(null);
+    }
+  };
+
+  const handleCommentChange = (postId, event) => {
+    setNewCommentContent((prev) => ({
+      ...prev,
+      [postId]: event.target.value,
+    }));
+  };
+
+  const handleCommentSubmit = (postId) => {
+    const commentContent = newCommentContent[postId];
+    if (commentContent) {
+      const updatedPosts = posts.map((post) => {
+        if (post.id === postId) {
+          return {
+            ...post,
+            comments: [
+              ...post.comments,
+              {
+                user: "Current User",
+                content: commentContent,
+                timestamp: new Date().toISOString(),
+              },
+            ],
+          };
+        }
+        return post;
+      });
+      setPosts(updatedPosts);
+      setNewCommentContent((prev) => ({
+        ...prev,
+        [postId]: "",
+      }));
+    }
+  };
+
+  return (
+    <Container className="mt-4">
+      <Row>
+        <Col md={8} className="mx-auto">
+          <h2 className="mb-4 post-text">Here's what's new!</h2>
+
+          {/* New Post Form */}
+          <Card className="mb-4">
+            <Card.Body>
+              <Form>
+                <Form.Group controlId="newPost">
+                  <Form.Control
+                    as="textarea"
+                    rows={3}
+                    placeholder="What's on your mind?"
+                    value={newPostContent}
+                    onChange={handlePostChange}
+                  />
+                </Form.Group>
+                <Button
+                  variant="primary"
+                  className="mt-3"
+                  onClick={handlePostSubmit}
+                >
+                  Post
+                </Button>
+              </Form>
+            </Card.Body>
+          </Card>
+
+          {posts.map((post) => (
+            <Card className="mb-4" key={post.id}>
+              <Card.Header className="d-flex align-items-center">
+                <Image
+                  src={post.userImage}
+                  roundedCircle
+                  className="mr-3"
+                  style={{ width: "50px" }}
+                />
+                <div className="userInfo">
+                  <strong>{post.user}</strong>
+                  <p className="text-muted mb-0">{post.time}</p>
+                </div>
+              </Card.Header>
               <Card.Body>
-                <Form>
-                  <Form.Group controlId="newPost">
+                <Card.Text>{post.content}</Card.Text>
+                {post.postImage && (
+                  <Card.Img
+                    src={post.postImage}
+                    alt="Post image"
+                    className="mb-3"
+                  />
+                )}
+                <div className="comments-section">
+                  {post.comments.map((comment, index) => (
+                    <div key={index} className="comment">
+                      <strong>{comment.user}: </strong>
+                      <span>{comment.content}</span>
+                    </div>
+                  ))}
+                  <Form.Group>
                     <Form.Control
-                      as="textarea"
-                      rows={3}
-                      placeholder="What's on your mind?"
+                      type="text"
+                      placeholder="Add a comment..."
+                      value={newCommentContent[post.id] || ""}
+                      onChange={(e) => handleCommentChange(post.id, e)}
                     />
                   </Form.Group>
-                  <Button variant="primary" className="mt-3">
-                    Post
-                  </Button>
-                </Form>
-              </Card.Body>
-            </Card>
-
-            {posts.map((post) => (
-              <Card className="mb-4" key={post.id}>
-                <Card.Header className="d-flex align-items-center">
-                  <Image
-                    src={post.userImage}
-                    roundedCircle
-                    className="mr-3"
-                    style={{ width: "50px" }}
-                  />
-                  <div>
-                    <strong>{post.user}</strong>
-                    <p className="text-muted mb-0">{post.time}</p>
-                  </div>
-                </Card.Header>
-                <Card.Body>
-                  <Card.Text>{post.content}</Card.Text>
-                  {post.postImage && (
-                    <Card.Img
-                      src={post.postImage}
-                      alt="Post image"
-                      className="mb-3"
-                    />
-                  )}
-                </Card.Body>
-                <Card.Footer>
                   <Button
-                    id="button-like"
                     variant="outline-primary"
-                    className="mr-2"
+                    onClick={() => handleCommentSubmit(post.id)}
                   >
-                    Like ({post.likes})
+                    Comment
                   </Button>
-                  <Button
-                    id="button-comment"
-                    variant="outline-secondary"
-                    className="mr-2"
-                  >
-                    Comment ({post.comments})
-                  </Button>
-                  <Button variant="outline-success">Share</Button>
-                </Card.Footer>
-              </Card>
-            ))}
-          </Col>
-        </Row>
-      </Container>
-    );
-  }
-}
+                </div>
+              </Card.Body>
+              <Card.Footer>
+                <Button
+                  id="button-like"
+                  variant="outline-primary"
+                  className="mr-2"
+                >
+                  Like ({post.likes})
+                </Button>
+                <Button
+                  id="button-comment"
+                  variant="outline-secondary"
+                  className="mr-2"
+                >
+                  Comment ({post.comments.length})
+                </Button>
+                <Button variant="outline-success">Share</Button>
+              </Card.Footer>
+            </Card>
+          ))}
+        </Col>
+      </Row>
+    </Container>
+  );
+};
 
 export default FeedPage;
