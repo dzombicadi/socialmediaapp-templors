@@ -4,12 +4,6 @@ import { ListGroup, Image } from "react-bootstrap";
 import { BsChatDots } from "react-icons/bs"; // Import the chat icon
 import { firebaseFirestore } from "../configuration";
 
-const users = [
-  { name: "John Doe", profilePic: "https://via.placeholder.com/50" },
-  { name: "Jane Smith", profilePic: "https://via.placeholder.com/50" },
-  { name: "Michael Brown", profilePic: "https://via.placeholder.com/50" },
-];
-
 const SidebarNav = () => {
   const [users, setUsers] = useState([]);
 
