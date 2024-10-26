@@ -6,11 +6,14 @@ import React, { useEffect, useState } from "react";
 import { Form, Button, Container, Row, Col } from "react-bootstrap";
 
 import { Outlet, Link } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext.tsx";
 
 function RegisterForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
+
+  const { registerUser } = useAuth();
 
   const validateForm = () => {
     const newErrors = {};
@@ -22,7 +25,7 @@ function RegisterForm() {
     return newErrors;
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const formErrors = validateForm();
     if (Object.keys(formErrors).length > 0) {
@@ -30,7 +33,8 @@ function RegisterForm() {
     } else {
       setErrors({});
       console.log("Login attempted with:", { email, password });
-      // Here you would typically send a request to your server
+      await registerUser(email, password)
+      .catch((err) => console.log("Caught error in register: " + err));
     }
   };
 
