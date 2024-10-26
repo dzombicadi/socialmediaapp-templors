@@ -13,37 +13,34 @@ import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { useAuth } from "../contexts/AuthContext.tsx";
 import { serverTimestamp } from "firebase/firestore";
 import { FeedService } from "../services/FeedService.ts";
-
-const initialPosts = [
-  {
-    id: 1,
-    user: "John Doe",
-    userImage: "https://via.placeholder.com/50",
-    content: "Enjoying a great day at the park!",
-    postImage: "https://via.placeholder.com/500",
-    time: "2 hours ago",
-    likes: 23,
-    comments: [],
-  },
-  {
-    id: 2,
-    user: "Jane Smith",
-    userImage: "https://via.placeholder.com/50",
-    content: "Loving the new React updates!",
-    postImage: "",
-    time: "5 hours ago",
-    likes: 15,
-    comments: [],
-  },
-];
+import { firebaseStorage } from "../configuration.jsx";
+import SidebarNav from "./SidebarNav"; // Import the SidebarNav component
 
 const FeedPage = () => {
-  const [posts, setPosts] = useState(initialPosts);
+  const [posts, setPosts] = useState([]);
   const [newPostContent, setNewPostContent] = useState("");
   const [newPostImage, setNewPostImage] = useState(null);
   const [newCommentContent, setNewCommentContent] = useState({});
   const { uid } = useAuth();
   const feedService = useMemo(() => new FeedService(uid), [uid]);
+
+  /*
+  const handleImageUpload = async (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const resizedImage = await resizeImage(file, 500, 500);
+      if (resizedImage) {
+        const imageRef = ref(firebaseStorage, `images/${file.name}`);
+        setUploading(true);
+        uploadBytes(imageRef, resizedImage).then(async (snapshot) => {
+          const url = await getDownloadURL(snapshot.ref);
+          setImageUrl(url);
+          setUploading(false);
+        });
+      }
+    }
+  };
+  */
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -59,15 +56,13 @@ const FeedPage = () => {
 
       setPosts(fetched);
     };
-
     fetchPosts();
-  });
+  }, [feedService]);
 
   const handlePostChange = (event) => {
     setNewPostContent(event.target.value);
   };
 
-  // OVDJE NAPRAVITI FETCH IMENA, PREZIMENA I PORUKE
   const handlePostSubmit = async () => {
     if (newPostContent || newPostImage) {
       const newpost = {
@@ -110,18 +105,16 @@ const FeedPage = () => {
   const [uploading, setUploading] = useState(false);
   const [imageUrl, setImageUrl] = useState(null);
 
-  // Handle file selection
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      setImage(file); // Save the file to state
-    }
-  };
-
   return (
     <Container className="mt-4">
       <Row>
-        <Col md={8} className="mx-auto">
+        {/* Add Navbar beside posts */}
+        <Col md={3}>
+          <SidebarNav />
+        </Col>
+
+        {/* Post feed */}
+        <Col md={9}>
           <h2 className="mb-4 post-text">Here's what's new!</h2>
 
           <Card className="mb-4">
@@ -143,11 +136,13 @@ const FeedPage = () => {
                 >
                   Post
                 </Button>
+
                 <Button
                   variant="primary"
                   className="mt-3 upload-button"
                   onClick={handlePostSubmit}
                   disabled={uploading}
+                  /*onChange={handleImageUpload}*/
                 >
                   {uploading ? "Uploading..." : "Upload Photo"}
                 </Button>
