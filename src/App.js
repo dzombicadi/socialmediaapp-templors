@@ -7,6 +7,7 @@ import RegisterForm from "./components/RegisterForm";
 import FeedPage from "./components/FeedPage";
 
 import NavBarFeed from "./components/NavBarFeed";
+import Footer from "./components/Footer.js";
 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
@@ -43,6 +44,7 @@ function App() {
                 <>
                   <NavBarFeed />
                   <FeedPage />
+                  <Footer />
                 </>
               }
             ></Route>

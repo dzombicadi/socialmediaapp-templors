@@ -9,11 +9,9 @@ import {
   Image,
   Form,
 } from "react-bootstrap";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { useAuth } from "../contexts/AuthContext.tsx";
 import { serverTimestamp } from "firebase/firestore";
 import { FeedService } from "../services/FeedService.ts";
-import { firebaseStorage } from "../configuration.jsx";
 import SidebarNav from "./SidebarNav"; // Import the SidebarNav component
 
 const FeedPage = () => {
@@ -90,7 +88,6 @@ const FeedPage = () => {
   return (
     <Container className="mt-4">
       <Row>
-        {/* Add Navbar beside posts */}
         <Col md={3}>
           <SidebarNav />
         </Col>
@@ -163,20 +160,23 @@ const FeedPage = () => {
                         <span>{comment.content}</span>
                       </div>
                     ))}
-                  <Form.Group>
+                  <Form.Group className="d-flex" style={{ width: "100%" }}>
                     <Form.Control
                       type="text"
                       placeholder="Add a comment..."
                       value={newCommentContent[post.id] || ""}
                       onChange={(e) => handleCommentChange(post.id, e)}
+                      className="flex-fill me-2"
                     />
+
+                    <Button
+                      variant="outline-primary"
+                      onClick={() => handleCommentSubmit(post.id)}
+                      className="comment-button"
+                    >
+                      Comment
+                    </Button>
                   </Form.Group>
-                  <Button
-                    variant="outline-primary"
-                    onClick={() => handleCommentSubmit(post.id)}
-                  >
-                    Comments
-                  </Button>
                 </div>
               </Card.Body>
               <Card.Footer>

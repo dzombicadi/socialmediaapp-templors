@@ -1,11 +1,9 @@
 import "../styles/NavBar-feed.css";
 import logo from "../images/logo.png";
-import React, { Component } from "react";
-import Dropdown from "react-bootstrap/Dropdown";
+import React from "react";
 
 import signOut from "../images/sign-out-icon.png";
 import accountIcon from "../images/account-icon.png";
-import { Link } from "react-router-dom";
 
 class NavBarFeed extends React.Component {
   render() {

@@ -2,13 +2,15 @@ import "../styles/RegisterForm.css";
 import "../global.css";
 
 import "bootstrap/dist/css/bootstrap.min.css";
-import React, { useEffect, useState } from "react";
-import { Form, Button, Container, Row, Col } from "react-bootstrap";
+import React, { useState } from "react";
+import { Form, Button } from "react-bootstrap";
 
-import { Outlet, Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext.tsx";
 
 function RegisterForm() {
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
@@ -19,11 +21,27 @@ function RegisterForm() {
 
   const validateForm = () => {
     const newErrors = {};
-    if (!email) newErrors.email = "Email is required";
-    else if (!/\S+@\S+\.\S+/.test(email)) newErrors.email = "Email is invalid";
-    if (!password) newErrors.password = "Password is required";
-    else if (password.length < 6)
+
+    if (!firstName) {
+      newErrors.firstName = "First name is required!";
+    }
+
+    if (!lastName) {
+      newErrors.lastName = "Last name is required!";
+    }
+
+    if (!email) {
+      newErrors.email = "Email is required!";
+    } else if (!/\S+@\S+\.\S+/.test(email)) {
+      newErrors.email = "Email is invalid";
+    }
+
+    if (!password) {
+      newErrors.password = "Password is required";
+    } else if (password.length < 6) {
       newErrors.password = "Password must be at least 6 characters";
+    }
+
     return newErrors;
   };
 
@@ -34,7 +52,12 @@ function RegisterForm() {
       setErrors(formErrors);
     } else {
       setErrors({});
-      console.log("Login attempted with:", { email, password });
+      console.log("Login attempted with:", {
+        email,
+        password,
+        firstName,
+        lastName,
+      });
       await registerUser(email, password)
         .then(() => navigate("/feedpage"))
         .catch((err) => console.log("Caught error in register: " + err));
@@ -47,6 +70,31 @@ function RegisterForm() {
         <div className="login-form-container">
           <h2 className="login-title">Register</h2>
           <Form onSubmit={handleSubmit} className="login-form">
+            <Form.Group className="mb-3" controlId="formBasicFirstName">
+              <Form.Label>First name</Form.Label>
+              <Form.Control
+                placeholder="Enter first name"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+                isInvalid={!!errors.firstName}
+              />
+              <Form.Control.Feedback type="invalid">
+                {errors.firstName}
+              </Form.Control.Feedback>
+            </Form.Group>
+
+            <Form.Group className="mb-3" controlId="formBasicLastName">
+              <Form.Label>Last name</Form.Label>
+              <Form.Control
+                placeholder="Enter last name"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+                isInvalid={!!errors.lastName}
+              />
+              <Form.Control.Feedback type="invalid">
+                {errors.lastName}
+              </Form.Control.Feedback>
+            </Form.Group>
             <Form.Group className="mb-3" controlId="formBasicEmail">
               <Form.Label>Email address</Form.Label>
               <Form.Control

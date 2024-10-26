@@ -1,7 +1,7 @@
 import { collection, getDocs } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { ListGroup, Image } from "react-bootstrap";
-import { BsChatDots } from "react-icons/bs"; // Import the chat icon
+import { BsChatDots } from "react-icons/bs";
 import { firebaseFirestore } from "../configuration";
 
 const SidebarNav = () => {
@@ -41,7 +41,7 @@ const SidebarNav = () => {
 
           <BsChatDots
             size={20}
-            className="text-primary text-me"
+            className="text-me text-primary"
             style={{ cursor: "pointer" }}
           />
         </ListGroup.Item>

@@ -11,6 +11,8 @@
   align-items: center;
   min-height: 70vh;
   padding: 20px;
+  margin-top: 30px;
+  margin-bottom: 30px;
 }
 
 .login-form-container {
@@ -36,13 +38,22 @@
   background-color: #393e46 !important;
 }
 
+.login-button:hover {
+  transition: 200ms all ease-in;
+  background-color: #00adb5 !important;
+}
+
 .sign-up-text {
   padding-top: 12px;
   text-align: center;
 }
 
+.sign-up-link {
+  color: #007b7f !important;
+}
+
 .sign-up-link:hover {
   transition: 500ms ease-in-out;
-  color: var(--blue-color);
+  color: #00adb5 !important;
   cursor: pointer;
 }

@@ -2,10 +2,10 @@ import "../styles/LoginRegisterForm.css";
 import "../global.css";
 
 import "bootstrap/dist/css/bootstrap.min.css";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Form, Button } from "react-bootstrap";
 
-import { Outlet, Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { useAuth } from "../contexts/AuthContext.tsx";
 

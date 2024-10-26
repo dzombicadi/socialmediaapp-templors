@@ -36,3 +36,21 @@
 textarea {
   resize: none;
 }
+
+.btn-primary {
+  background-color: #393e46 !important;
+}
+
+.btn-primary:hover {
+  transition: 200ms all ease-in;
+  background-color: #00adb5 !important;
+}
+
+.btn-primary .inline-flex-group {
+  display: inline-block;
+  align-items: center;
+}
+
+.comment-button {
+  padding-left: 10px !important;
+}
