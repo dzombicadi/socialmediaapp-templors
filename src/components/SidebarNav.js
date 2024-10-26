@@ -3,9 +3,14 @@ import React, { useEffect, useState } from "react";
 import { ListGroup, Image } from "react-bootstrap";
 import { BsChatDots } from "react-icons/bs";
 import { firebaseFirestore } from "../configuration";
+import { useAuth } from "../contexts/AuthContext.tsx";
+import { createOrGetChat } from "../services/MessageService.ts";
+import { useNavigate } from "react-router-dom";
 
 const SidebarNav = () => {
   const [users, setUsers] = useState([]);
+  const { uid } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -27,6 +32,13 @@ const SidebarNav = () => {
     fetchUsers();
   }, []);
 
+  const handleMessageButton = async (otherId) => {
+    console.log("Clicked on button id: " + otherId);
+    const chat = await createOrGetChat(uid, otherId)
+    .catch((err) => console.log("Err in createOrGetChar: " + err));
+    navigate(`/chat/${chat.id}`); 
+  }
+
   return (
     <ListGroup variant="flush">
       {users.map((user, index) => (
@@ -43,6 +55,7 @@ const SidebarNav = () => {
             size={20}
             className="text-me text-primary"
             style={{ cursor: "pointer" }}
+            onClick={() => handleMessageButton(user.userId)}
           />
         </ListGroup.Item>
       ))}

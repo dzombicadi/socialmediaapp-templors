@@ -49,7 +49,7 @@ function App() {
               }
             ></Route>
             <Route
-              path="/feedpage/chat"
+              path="/chat/:chatId"
               element={
                 <>
                   <NavBar></NavBar>

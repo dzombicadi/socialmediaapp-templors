@@ -1,24 +1,9 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "../styles/Chat.css";
-import { useNavigate } from "react-router-dom";
-
-const messages = [
-  {
-    user: "Alice",
-    content: "Hey! How are you?",
-    timestamp: "2024-10-26T12:00:00",
-  },
-  {
-    user: "Bob",
-    content: "I’m good, thanks! How about you?",
-    timestamp: "2024-10-26T12:01:00",
-  },
-  {
-    user: "Alice",
-    content: "Doing well! Just enjoying the day.",
-    timestamp: "2024-10-26T12:02:00",
-  },
-];
+import { useNavigate, useParams } from "react-router-dom";
+import { getChat, getChatRef } from "../services/MessageService.ts";
+import { useAuth } from "../contexts/AuthContext.tsx";
+import { arrayUnion, doc, serverTimestamp, updateDoc } from "firebase/firestore";
 
 const Chat = () => {
   const navigate = useNavigate();
@@ -26,14 +11,64 @@ const Chat = () => {
     navigate("/feedpage");
   };
 
+  const { chatId } = useParams();
+  const { uid } = useAuth();
+ 
+  const [messages, setMessages] = useState([]);
+  const [outgoing, setOutgoing] = useState();
+
+  const fetchMessages = async () => {
+    const msgs = await getChat(chatId);
+
+    try {
+      if (msgs.exists()) { 
+        const messagesArray = msgs.data().messages || [];
+        const fetched = messagesArray.map((msg) => ({
+            ...msg,
+            timestamp: msg.time ? new Date(msg.time.toDate()).toLocaleString() : null, 
+        }));
+        console.log("Fetched messages array: ", fetched); 
+        setMessages(fetched);
+      } else {
+        console.log("No messages found for chat id: " + chatId);
+        setMessages([]); 
+      }
+    } catch (err) {
+        console.log("Could not find chat " + chatId, err);
+        setMessages([]); 
+    }
+  };
+
+  useEffect(() => {
+    fetchMessages();
+  }, []);
+
+  const handleSendMessage = async () => {
+    if (outgoing) {
+      const newMessage = {
+        uid: uid,
+        content: outgoing,
+        timestamp: new Date(serverTimestamp()).toLocaleString()
+      };
+
+      const chatRef = getChatRef();
+      await updateDoc(doc(chatRef, chatId), {
+        messages: arrayUnion(newMessage)
+      });
+      
+      setOutgoing("");
+      fetchMessages();
+    }
+  }
+
   return (
     <div className="chat-container">
       <h1>Chat between Alice and Bob</h1>
       <div className="messages-container">
-        {messages.map((message) => (
-          <div key={message.id} className="message">
+        {messages && messages.map((message) => (
+          <div key={message.uid} className="message">
             <div className="message-info">
-              <strong>{message.user}</strong>
+              <strong>{message.uid}</strong>
               <span className="timestamp">
                 {new Date(message.timestamp).toLocaleTimeString()}
               </span>
@@ -45,12 +80,11 @@ const Chat = () => {
       <div className="input-container">
         <input
           type="text"
-          // value={newMessage}
-          // onChange={(e) => setNewMessage(e.target.value)}
-
+          value={outgoing}
+          onChange={(e) => setOutgoing(e.target.value)}
           placeholder="Type your message..."
         />
-        <button className="send-button" /*onClick={handleSendMessage}*/>
+        <button className="send-button" onClick={() => handleSendMessage()}>
           Send
         </button>
         <button onClick={handleGoToFeed} className="return-button">

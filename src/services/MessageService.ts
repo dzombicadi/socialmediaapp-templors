@@ -1,5 +1,5 @@
-import { Timestamp, arrayUnion, collection, doc, getDoc, getDocs, serverTimestamp, setDoc, updateDoc } from "firebase/firestore";
-import { UserProvider } from "./UserProvider";
+import { Timestamp, addDoc, arrayUnion, collection, doc, getDoc, getDocs, query, serverTimestamp, setDoc, updateDoc, where } from "firebase/firestore";
+import { UserProvider } from "./UserProvider.ts";
 import { firebaseFirestore } from "../configuration";
 
 export interface Message {
@@ -8,60 +8,41 @@ export interface Message {
     timestamp: Timestamp
 }
 
-export class ChatService {
+export const getChatRef = () => {
+    return collection(firebaseFirestore, "chats");
+}
 
-    userId: string
-    userService: UserProvider
-    constructor(uid: string) {
-        this.userId = uid;
-        this.userService = new UserProvider(uid);
+export const getChat = async (chatId: string) => {
+    const chatsRef = getChatRef();
+    return await getDoc(doc(chatsRef, chatId));
+}
+
+const getChatsWithUsers = async (userId: string, otherId: string) => {
+    const chatsRef = getChatRef();
+    const q = query(chatsRef, where("users." + userId, "==", true), where("users." + otherId, "==", true));
+    return getDocs(q);
+}
+
+const createChat = async (userId: string, otherId: string) => {
+    const chatsRef = getChatRef();
+    var dataPayload = {};
+    dataPayload["users"] = {
+        [userId]: true,
+        [otherId]: true
     }
+    dataPayload["messages"] = [];
+    return addDoc(chatsRef, dataPayload);
+}
 
-    private getChatRefById = (otherId: string) => {
-        const userDocRef = doc(firebaseFirestore, "users", this.userId);
-        const chatCollRef = collection(userDocRef, "chats");
-        const chatByIdRef = doc(chatCollRef, otherId);
-
-        return chatByIdRef;
-    }
-
-    getChatByUserId = async (otherId: string) => {
-        const chatByIdRef = this.getChatRefById(otherId);
-
-        const snap = await getDoc(chatByIdRef);
-        if (!snap.exists()) {
-            return this.createChat(otherId);
-        } else {
-            return snap;
-        }
-    }
-
-    createChat = async (otherId: string) => {
-        const chatByIdRef = this.getChatRefById(otherId);
-
-        const snap = await getDoc(chatByIdRef);
-        if (!snap.exists()) {
-            setDoc(chatByIdRef, {messages: ["Placeholder 1", "Placeholdeer 2"]});
-        }
-        return snap;
-    }
-
-    getChatMessages = async (otherId: string) => {
-        const chatData = await this.getChatByUserId(otherId);
-        return chatData?.data()?.messages;
-    }
-
-    sendChatMessage = async (otherId: string, content: string) => {
-        const chatData = await this.getChatRefById(otherId);
-        const messagesPayload = {
-            user: this.userId,
-            content: content,
-            timestamp: serverTimestamp()
-        };
-        await updateDoc(chatData, {
-            messages: arrayUnion(messagesPayload)
-        });
-
-        console.log("Updated message id: " + otherId);
+export const createOrGetChat = async (userId: string, otherId: string) => {
+    const chats = await getChatsWithUsers(userId, otherId);
+    console.log("chats empty: " + chats.empty);
+    console.log(chats.size);
+    console.log(chats.docs.forEach((doc) => console.log("docId: " + doc.id)))
+    if (chats.empty) {
+        const created = await createChat(userId, otherId);
+        return created;
+    } else {
+        return chats.docs.at(0);
     }
 }
