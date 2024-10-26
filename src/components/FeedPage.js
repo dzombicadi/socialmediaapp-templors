@@ -53,7 +53,7 @@ const FeedPage = () => {
       const fetched = posts.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
-        time: new Date(doc.data().time).toLocaleString(),
+        time: new Date(doc.data().time.toDate()).toLocaleString(),
         comments: doc.data().comments || [],
       }));
 

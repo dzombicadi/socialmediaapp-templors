@@ -41,19 +41,6 @@ export class FeedService {
     return getDoc(doc(firebaseFirestore, "posts", postId));
   };
 
-  /*
-  addComment = async (postId: string, content: string) => {
-    const post = await this.getPostById(postId);
-    if (post === undefined) {
-      console.log("Could not find post to add comment to, postId: " + postId);
-    }
-    const current = post.data()?.comments;
-    return updateDoc(doc(firebaseFirestore, "posts", postId), {
-      comments: [...current, content],
-    });
-  };
-  */
-
   addComment = async (postId: string, content: string) => {
     try {
       const postRef = doc(firebaseFirestore, "posts", postId);
