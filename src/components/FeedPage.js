@@ -170,12 +170,13 @@ const FeedPage = () => {
                   />
                 )}
                 <div className="comments-section">
-                  {post.comments.map((comment, index) => (
-                    <div key={index} className="comment">
-                      <strong>{comment.user}: </strong>
-                      <span>{comment.content}</span>
-                    </div>
-                  ))}
+                  {post.comments &&
+                    post.comments.map((comment, index) => (
+                      <div key={index} className="comment">
+                        <strong>{comment.user}: </strong>
+                        <span>{comment.content}</span>
+                      </div>
+                    ))}
                   <Form.Group>
                     <Form.Control
                       type="text"
