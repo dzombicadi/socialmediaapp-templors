@@ -47,15 +47,18 @@ const FeedPage = () => {
 
   useEffect(() => {
     const fetchPosts = async () => {
-      const posts = await feedService.getAllPosts().catch((err) => "Error fetching posts: " + err);
-      const fetched = posts.docs.map(doc => ({
+      const posts = await feedService
+        .getAllPosts()
+        .catch((err) => "Error fetching posts: " + err);
+      const fetched = posts.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
-        time: new Date(doc.data().time).toLocaleString()
+        time: new Date(doc.data().time).toLocaleString(),
+        comments: doc.data().comments || [],
       }));
 
       setPosts(fetched);
-    }
+    };
 
     fetchPosts();
   });
@@ -67,29 +70,17 @@ const FeedPage = () => {
   // OVDJE NAPRAVITI FETCH IMENA, PREZIMENA I PORUKE
   const handlePostSubmit = async () => {
     if (newPostContent || newPostImage) {
-      /*const newPost = {
-        id: posts.length + 1,
-        user: "Current User",
+      const newpost = {
+        user: uid,
         userImage: "https://via.placeholder.com/50",
         content: newPostContent,
-        postImage: newPostImage,
-        time: "Just now",
+        time: serverTimestamp(),
         likes: 0,
         comments: [],
       };
-      setPosts([newPost, ...posts]);
-      setNewPostContent("");
-      setNewPostImage(null);
-      */
-     const newpost = {
-      user: uid,
-      userImage: "https://via.placeholder.com/50",
-      content: newPostContent,
-      time: serverTimestamp(),
-      likes: 0,
-      comments: []
-     }
-     await feedService.feedPost(newpost).catch((err) => console.log("Caught post error: " + err));
+      await feedService
+        .feedPost(newpost)
+        .catch((err) => console.log("Caught post error: " + err));
     }
   };
 
@@ -103,16 +94,17 @@ const FeedPage = () => {
   const handleCommentSubmit = async (postId) => {
     const commentContent = newCommentContent[postId];
     if (commentContent) {
-      await feedService.addComment(postId, commentContent).catch((err) => console.log("Caught comment err: " + err));
-    };
-      /*setPosts(updatedPosts);
-      setNewCommentContent((prev) => ({
-        ...prev,
-        [postId]: "",
-      }));*/
-
+      try {
+        await feedService.addComment(postId, {
+          user: uid,
+          content: commentContent,
+        });
+        setNewCommentContent((prev) => ({ ...prev, [postId]: "" }));
+      } catch (err) {
+        console.log("Error adding comment: " + err);
+      }
+    }
   };
-
 
   const [image, setImage] = useState(null);
   const [uploading, setUploading] = useState(false);
@@ -187,13 +179,13 @@ const FeedPage = () => {
                   />
                 )}
                 <div className="comments-section">
-
-                  {post.comments && post.comments.map((comment, index) => (
-                    <div key={index} className="comment">
-                      <strong>{comment.user}: </strong>
-                      <span>{comment.content}</span>
-                    </div>
-                  ))}
+                  {post.comments &&
+                    post.comments.map((comment, index) => (
+                      <div key={index} className="comment">
+                        <strong>{comment.user}: </strong>
+                        <span>{comment.content}</span>
+                      </div>
+                    ))}
                   <Form.Group>
                     <Form.Control
                       type="text"
@@ -206,7 +198,7 @@ const FeedPage = () => {
                     variant="outline-primary"
                     onClick={() => handleCommentSubmit(post.id)}
                   >
-                    Comment
+                    Comments
                   </Button>
                 </div>
               </Card.Body>
