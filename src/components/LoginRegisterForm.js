@@ -7,7 +7,6 @@ import { Form, Button, Container, Row, Col } from "react-bootstrap";
 
 import { Outlet, Link } from "react-router-dom";
 
-import { loginUser } from "../authutils.ts";
 import { useAuth } from "../contexts/AuthContext.tsx";
 
 function LoginRegisterForm() {

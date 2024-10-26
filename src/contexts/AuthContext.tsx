@@ -4,7 +4,7 @@ import { useContext, useEffect, useState } from "react";
 import React from "react";
 import { doc, serverTimestamp, setDoc } from "firebase/firestore";
 
-const AuthContext = React.createContext({});
+export const AuthContext = React.createContext({});
 
 export const AuthProvider = ({ children }) => {
 
@@ -12,7 +12,7 @@ export const AuthProvider = ({ children }) => {
     const [pending, setPending] = useState(true);
 
     useEffect(() => {
-        const subscribe = onAuthStateChanged(firebaseAuth, (authUser: User | null) => {
+        const subscribe = onAuthStateChanged(firebaseAuth, (authUser: User | null) => {
             if (authUser) {
                 setUID(authUser.uid);
                 setPending(false);
