@@ -65,7 +65,7 @@ input {
   margin-right: 10px;
 }
 
-button {
+.send-button {
   padding: 10px 15px;
   background-color: var(--blue-color) !important;
   color: white; /* Text color */
@@ -74,7 +74,20 @@ button {
   cursor: pointer; /* Pointer cursor on hover */
 }
 
-button:hover {
+.send-button:hover {
+  background-color: #7bb2b5 !important;
+}
+
+.return-button {
+  padding: 10px 15px;
+  background-color: var(--blue-color) !important;
+  color: white; /* Text color */
+  border: none; /* Remove default border */
+  border-radius: 5px; /* Rounded corners */
+  cursor: pointer; /* Pointer cursor on hover */
+}
+
+.return-button:hover {
   background-color: #7bb2b5 !important;
 }
 

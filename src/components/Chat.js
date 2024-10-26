@@ -50,7 +50,9 @@ const Chat = () => {
 
           placeholder="Type your message..."
         />
-        <button /*onClick={handleSendMessage}*/>Send</button>
+        <button className="send-button" /*onClick={handleSendMessage}*/>
+          Send
+        </button>
         <button onClick={handleGoToFeed} className="return-button">
           Return
         </button>
