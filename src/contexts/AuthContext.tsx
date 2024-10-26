@@ -13,10 +13,8 @@ export const AuthProvider = ({ children }) => {
 
     useEffect(() => {
         const subscribe = onAuthStateChanged(firebaseAuth, (authUser: User | null) => {
-            if (authUser) {
-                setUID(authUser.uid);
-                setPending(false);
-            }
+            setUID(authUser ? authUser.uid : "undef");
+            setPending(false);
         });
         return subscribe;
     }, []);

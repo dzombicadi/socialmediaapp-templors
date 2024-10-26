@@ -10,11 +10,12 @@ import NavBarFeed from "./components/NavBarFeed";
 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-import { AuthContext } from './contexts/AuthContext.tsx'
+import { AuthProvider } from './contexts/AuthContext.tsx'
 
 function App() {
   return (
     <div className="App">
+      <AuthProvider>
       <BrowserRouter>
         <Routes>
           <Route
@@ -46,7 +47,7 @@ function App() {
           ></Route>
         </Routes>
       </BrowserRouter>
-      </AuthContext>
+      </AuthProvider>
     </div>
   );
 }
