@@ -187,6 +187,7 @@ const FeedPage = () => {
                   />
                 )}
                 <div className="comments-section">
+
                   {post.comments && post.comments.map((comment, index) => (
                     <div key={index} className="comment">
                       <strong>{comment.user}: </strong>
