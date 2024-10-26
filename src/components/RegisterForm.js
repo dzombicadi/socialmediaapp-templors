@@ -5,13 +5,15 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useEffect, useState } from "react";
 import { Form, Button, Container, Row, Col } from "react-bootstrap";
 
-import { Outlet, Link } from "react-router-dom";
+import { Outlet, Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext.tsx";
 
 function RegisterForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
+
+  const navigate = useNavigate();
 
   const { registerUser } = useAuth();
 
@@ -34,7 +36,8 @@ function RegisterForm() {
       setErrors({});
       console.log("Login attempted with:", { email, password });
       await registerUser(email, password)
-      .catch((err) => console.log("Caught error in register: " + err));
+        .then(() => navigate("/feedpage"))
+        .catch((err) => console.log("Caught error in register: " + err));
     }
   };
 

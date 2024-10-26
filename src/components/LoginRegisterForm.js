@@ -5,7 +5,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useEffect, useState } from "react";
 import { Form, Button } from "react-bootstrap";
 
-import { Outlet, Link } from "react-router-dom";
+import { Outlet, Link, useNavigate } from "react-router-dom";
 
 import { useAuth } from "../contexts/AuthContext.tsx";
 
@@ -15,6 +15,8 @@ function LoginRegisterForm() {
   const [errors, setErrors] = useState({});
 
   const { loginUser } = useAuth();
+
+  const navigate = useNavigate();
 
   const validateForm = () => {
     const newErrors = {};
@@ -34,7 +36,9 @@ function LoginRegisterForm() {
     } else {
       setErrors({});
       console.log("Login attempted with:", { email, password });
-      await loginUser(email, password).catch((err) => console.log("Caught error: " + err));
+      await loginUser(email, password)
+        .then(() => navigate("/feedpage"))
+        .catch((err) => console.log("Caught error: " + err));
       // TODO: Fix error handling
     }
   };
@@ -76,6 +80,7 @@ function LoginRegisterForm() {
             <Button type="submit" className="login-button">
               Login
             </Button>
+
             <h6 className="sign-up-text">
               No account?{" "}
               <Link className="sign-up-link" to="/register">
