@@ -18,6 +18,11 @@ Install UniNet with npm
   npm install or yarn
 ```
 
+**Note:** TypeScript is causing problems, so If any of the necessary dependencies cannot be installed, try installing TypeScript even though it's already installed.
+Example:
+```
+npm i react-router-dom typescript
+```
 
 ---   
 ## 🚀 Build and Run For Production
