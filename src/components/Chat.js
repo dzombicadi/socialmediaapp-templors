@@ -4,6 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { getChat, getChatRef } from "../services/MessageService.ts";
 import { useAuth } from "../contexts/AuthContext.tsx";
 import { arrayUnion, doc, serverTimestamp, updateDoc } from "firebase/firestore";
+import { UserProvider, getUserData } from "../services/UserProvider.ts";
 
 const Chat = () => {
   const navigate = useNavigate();
@@ -17,6 +18,16 @@ const Chat = () => {
   const [messages, setMessages] = useState([]);
   const [outgoing, setOutgoing] = useState();
 
+  const fetchUserData = async (userid) => {
+    const uData = await getUserData(userid);
+    setUserData(uData);
+  }
+
+  const [userData, setUserData] = useState({});
+  useEffect(() => {
+    fetchUserData(uid);
+  }, [])
+
   const fetchMessages = async () => {
     const msgs = await getChat(chatId);
 
@@ -25,7 +36,7 @@ const Chat = () => {
         const messagesArray = msgs.data().messages || [];
         const fetched = messagesArray.map((msg) => ({
             ...msg,
-            timestamp: msg.time ? new Date(msg.time.toDate()).toLocaleString() : null, 
+            timestamp: msg.timestamp ? new Date(msg.timestamp.toDate()).toLocaleString() : null, 
         }));
         console.log("Fetched messages array: ", fetched); 
         setMessages(fetched);
@@ -63,7 +74,7 @@ const Chat = () => {
 
   return (
     <div className="chat-container">
-      <h1>Chat between Alice and Bob</h1>
+      <h1>{userData.firstName + " " + userData.lastName + "'s chat"}</h1>
       <div className="messages-container">
         {messages && messages.map((message) => (
           <div key={message.uid} className="message">

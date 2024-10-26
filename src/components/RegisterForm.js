@@ -58,7 +58,7 @@ function RegisterForm() {
         firstName,
         lastName,
       });
-      await registerUser(email, password)
+      await registerUser(email, password, firstName, lastName)
         .then(() => navigate("/feedpage"))
         .catch((err) => console.log("Caught error in register: " + err));
     }

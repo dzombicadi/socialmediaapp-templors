@@ -19,14 +19,15 @@ export const AuthProvider = ({ children }) => {
         return subscribe;
     }, []);
 
-    const registerUser = async (email: string, password: string) => {
+    const registerUser = async (email: string, password: string, firstName: string, lastName: string) => {
         return createUserWithEmailAndPassword(firebaseAuth, email, password)
         .then((userCreds: UserCredential) => {
             if (userCreds.user) {
                 setDoc(doc(firebaseFirestore, "users", userCreds.user.uid), 
                 {
                     email: userCreds.user.email,
-                    name: "newuser",
+                    firstName: firstName,
+                    lastName: lastName,
                     registerTime: serverTimestamp(),
                     lastLogin: serverTimestamp()
                 }, { merge: true })

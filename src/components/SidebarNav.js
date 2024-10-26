@@ -21,7 +21,8 @@ const SidebarNav = () => {
       );
       console.log(userDocs);
       const fetched = userDocs.docs.map((user) => ({
-        name: user.data().name,
+        firstName: user.data().firstName,
+        lastName: user.data().lastName,
         profilePic: "https://via.placeholder.com/50",
         userId: user.id,
       }));
@@ -49,7 +50,7 @@ const SidebarNav = () => {
             style={{ width: "40px", marginRight: "10px" }}
           />
 
-          <div className="flex-grow-1">{user.name}</div>
+          <div className="flex-grow-1">{user.firstName + " " + user.lastName}</div>
 
           <BsChatDots
             size={20}

@@ -13,6 +13,7 @@ import { useAuth } from "../contexts/AuthContext.tsx";
 import { serverTimestamp } from "firebase/firestore";
 import { FeedService } from "../services/FeedService.ts";
 import SidebarNav from "./SidebarNav"; // Import the SidebarNav component
+import { getUserData } from "../services/UserProvider.ts";
 
 const FeedPage = () => {
   const [posts, setPosts] = useState([]);
@@ -22,22 +23,26 @@ const FeedPage = () => {
   const { uid } = useAuth();
   const feedService = useMemo(() => new FeedService(uid), [uid]);
 
-  useEffect(() => {
-    const fetchPosts = async () => {
-      const posts = await feedService
-        .getAllPosts()
-        .catch((err) => "Error fetching posts: " + err);
-      const fetched = posts.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-        time: new Date(doc.data().time.toDate()).toLocaleString(),
-        comments: doc.data().comments || [],
-      }));
+  const fetchPosts = async () => {
+    const posts = await feedService
+      .getAllPosts()
+      .catch((err) => "Error fetching posts: " + err);
+    const fetched = posts.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+      comments: doc.data().comments || [],
+    })).sort((a, b) => b.time - a.time)
+    .map((sortedDoc) => ({
+      ...sortedDoc,
+      time: new Date(sortedDoc.time.toDate()).toLocaleString()
+    }));
 
-      setPosts(fetched);
-    };
+    setPosts(fetched);
+  };
+
+  useEffect(() => {
     fetchPosts();
-  }, [feedService]);
+  }, []);
 
   const handlePostChange = (event) => {
     setNewPostContent(event.target.value);
@@ -45,17 +50,34 @@ const FeedPage = () => {
 
   const handlePostSubmit = async () => {
     if (newPostContent || newPostImage) {
-      const newpost = {
-        user: uid,
-        userImage: "https://via.placeholder.com/50",
-        content: newPostContent,
-        time: serverTimestamp(),
-        likes: 0,
-        comments: [],
-      };
+      const userData = await getUserData(uid);
+      var newpost;
+      if (!userData) {
+        newpost = {
+          firstName: uid,
+          lastName: uid,
+          userImage: "https://via.placeholder.com/50",
+          content: newPostContent,
+          time: serverTimestamp(),
+          likes: 0,
+          comments: [],
+        };
+      } else {
+        newpost = {
+          firstName: userData.firstName,
+          lastName: userData.lastName,
+          userImage: "https://via.placeholder.com/50",
+          content: newPostContent,
+          time: serverTimestamp(),
+          likes: 0,
+          comments: [],
+        };
+      }
       await feedService
         .feedPost(newpost)
         .catch((err) => console.log("Caught post error: " + err));
+        setNewPostContent("");
+      await fetchPosts();
     }
   };
 
@@ -139,7 +161,7 @@ const FeedPage = () => {
                   style={{ width: "50px" }}
                 />
                 <div className="userInfo">
-                  <strong>{post.user}</strong>
+                  <strong>{post.firstName + " " + post.lastName}</strong>
                   <p className="text-muted mb-0">{post.time}</p>
                 </div>
               </Card.Header>
