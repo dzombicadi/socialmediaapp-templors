@@ -1,5 +1,5 @@
 import "../styles/FeedPage.css";
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   Container,
   Row,
@@ -10,6 +10,9 @@ import {
   Form,
 } from "react-bootstrap";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { useAuth } from "../contexts/AuthContext.tsx";
+import { serverTimestamp } from "firebase/firestore";
+import { FeedService } from "../services/FeedService.ts";
 
 const initialPosts = [
   {
@@ -39,15 +42,32 @@ const FeedPage = () => {
   const [newPostContent, setNewPostContent] = useState("");
   const [newPostImage, setNewPostImage] = useState(null);
   const [newCommentContent, setNewCommentContent] = useState({});
+  const { uid } = useAuth();
+  const feedService = useMemo(() => new FeedService(uid), [uid]);
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      const posts = await feedService.getAllPosts().catch((err) => "Error fetching posts: " + err);
+      const fetched = posts.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data(),
+        time: new Date(doc.data().time).toLocaleString()
+      }));
+
+      setPosts(fetched);
+    }
+
+    fetchPosts();
+  });
 
   const handlePostChange = (event) => {
     setNewPostContent(event.target.value);
   };
 
   // OVDJE NAPRAVITI FETCH IMENA, PREZIMENA I PORUKE
-  const handlePostSubmit = () => {
+  const handlePostSubmit = async () => {
     if (newPostContent || newPostImage) {
-      const newPost = {
+      /*const newPost = {
         id: posts.length + 1,
         user: "Current User",
         userImage: "https://via.placeholder.com/50",
@@ -60,6 +80,16 @@ const FeedPage = () => {
       setPosts([newPost, ...posts]);
       setNewPostContent("");
       setNewPostImage(null);
+      */
+     const newpost = {
+      user: uid,
+      userImage: "https://via.placeholder.com/50",
+      content: newPostContent,
+      time: serverTimestamp(),
+      likes: 0,
+      comments: []
+     }
+     await feedService.feedPost(newpost).catch((err) => console.log("Caught post error: " + err));
     }
   };
 
@@ -70,32 +100,19 @@ const FeedPage = () => {
     }));
   };
 
-  const handleCommentSubmit = (postId) => {
+  const handleCommentSubmit = async (postId) => {
     const commentContent = newCommentContent[postId];
     if (commentContent) {
-      const updatedPosts = posts.map((post) => {
-        if (post.id === postId) {
-          return {
-            ...post,
-            comments: [
-              ...post.comments,
-              {
-                user: "Current User",
-                content: commentContent,
-                timestamp: new Date().toISOString(),
-              },
-            ],
-          };
-        }
-        return post;
-      });
-      setPosts(updatedPosts);
+      await feedService.addComment(postId, commentContent).catch((err) => console.log("Caught comment err: " + err));
+    };
+      /*setPosts(updatedPosts);
       setNewCommentContent((prev) => ({
         ...prev,
         [postId]: "",
-      }));
-    }
+      }));*/
+
   };
+
 
   const [image, setImage] = useState(null);
   const [uploading, setUploading] = useState(false);
@@ -170,13 +187,13 @@ const FeedPage = () => {
                   />
                 )}
                 <div className="comments-section">
-                  {post.comments &&
-                    post.comments.map((comment, index) => (
-                      <div key={index} className="comment">
-                        <strong>{comment.user}: </strong>
-                        <span>{comment.content}</span>
-                      </div>
-                    ))}
+
+                  {post.comments && post.comments.map((comment, index) => (
+                    <div key={index} className="comment">
+                      <strong>{comment.user}: </strong>
+                      <span>{comment.content}</span>
+                    </div>
+                  ))}
                   <Form.Group>
                     <Form.Control
                       type="text"
@@ -206,7 +223,7 @@ const FeedPage = () => {
                   variant="outline-secondary"
                   className="mr-2"
                 >
-                  Comment ({post.comments.length})
+                  Comment ({post.comments && post.comments.length})
                 </Button>
                 <Button variant="outline-success">Share</Button>
               </Card.Footer>
