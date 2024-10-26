@@ -3,11 +3,11 @@ import "../global.css";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useEffect, useState } from "react";
-import { Form, Button, Container, Row, Col } from "react-bootstrap";
+import { Form, Button } from "react-bootstrap";
 
 import { Outlet, Link } from "react-router-dom";
 
-import { loginUser } from "../authutils.ts";
+// import { loginUser } from "../authutils.ts";
 
 function LoginRegisterForm() {
   const [email, setEmail] = useState("");

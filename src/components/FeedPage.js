@@ -9,6 +9,7 @@ import {
   Image,
   Form,
 } from "react-bootstrap";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 const initialPosts = [
   {
@@ -96,13 +97,24 @@ const FeedPage = () => {
     }
   };
 
+  const [image, setImage] = useState(null);
+  const [uploading, setUploading] = useState(false);
+  const [imageUrl, setImageUrl] = useState(null);
+
+  // Handle file selection
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setImage(file); // Save the file to state
+    }
+  };
+
   return (
     <Container className="mt-4">
       <Row>
         <Col md={8} className="mx-auto">
           <h2 className="mb-4 post-text">Here's what's new!</h2>
 
-          {/* New Post Form */}
           <Card className="mb-4">
             <Card.Body>
               <Form>
@@ -121,6 +133,14 @@ const FeedPage = () => {
                   onClick={handlePostSubmit}
                 >
                   Post
+                </Button>
+                <Button
+                  variant="primary"
+                  className="mt-3 upload-button"
+                  onClick={handlePostSubmit}
+                  disabled={uploading}
+                >
+                  {uploading ? "Uploading..." : "Upload Photo"}
                 </Button>
               </Form>
             </Card.Body>
