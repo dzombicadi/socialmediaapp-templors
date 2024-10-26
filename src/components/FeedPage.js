@@ -24,24 +24,6 @@ const FeedPage = () => {
   const { uid } = useAuth();
   const feedService = useMemo(() => new FeedService(uid), [uid]);
 
-  /*
-  const handleImageUpload = async (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const resizedImage = await resizeImage(file, 500, 500);
-      if (resizedImage) {
-        const imageRef = ref(firebaseStorage, `images/${file.name}`);
-        setUploading(true);
-        uploadBytes(imageRef, resizedImage).then(async (snapshot) => {
-          const url = await getDownloadURL(snapshot.ref);
-          setImageUrl(url);
-          setUploading(false);
-        });
-      }
-    }
-  };
-  */
-
   useEffect(() => {
     const fetchPosts = async () => {
       const posts = await feedService
