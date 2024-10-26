@@ -77,3 +77,7 @@ button {
 button:hover {
   background-color: #7bb2b5 !important;
 }
+
+.return-button {
+  margin-left: 5px;
+}

@@ -1,5 +1,6 @@
 import React from "react";
-import "../styles/Chat.css"; // Import CSS for styling
+import "../styles/Chat.css";
+import { useNavigate } from "react-router-dom";
 
 const messages = [
   {
@@ -20,6 +21,11 @@ const messages = [
 ];
 
 const Chat = () => {
+  const navigate = useNavigate();
+  const handleGoToFeed = () => {
+    navigate("/feedpage");
+  };
+
   return (
     <div className="chat-container">
       <h1>Chat between Alice and Bob</h1>
@@ -45,6 +51,9 @@ const Chat = () => {
           placeholder="Type your message..."
         />
         <button /*onClick={handleSendMessage}*/>Send</button>
+        <button onClick={handleGoToFeed} className="return-button">
+          Return
+        </button>
       </div>
     </div>
   );
