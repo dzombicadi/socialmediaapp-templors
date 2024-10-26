@@ -26,4 +26,4 @@ class UserProvider {
 
 }
 
-export { UserData, UserProvider }
+export { UserData, UserProvider}
