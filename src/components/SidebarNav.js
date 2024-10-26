@@ -1,6 +1,8 @@
-import React from "react";
+import { collection, getDocs } from "firebase/firestore";
+import React, { useEffect, useState } from "react";
 import { ListGroup, Image } from "react-bootstrap";
 import { BsChatDots } from "react-icons/bs"; // Import the chat icon
+import { firebaseFirestore } from "../configuration";
 
 const users = [
   { name: "John Doe", profilePic: "https://via.placeholder.com/50" },
@@ -10,6 +12,26 @@ const users = [
 ];
 
 const SidebarNav = () => {
+
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+
+    const fetchUsers = async () => {
+      const userDocs = await getDocs(collection(firebaseFirestore, "users")).catch((err) => console.log("Error while fetching users for sidebar: " + err));
+      console.log(userDocs);
+      const fetched = userDocs.docs.map((user) => ({
+        name: user.data().name,
+        profilePic: "https://via.placeholder.com/50",
+        userId: user.id
+      }));
+
+      setUsers(fetched);
+    } 
+
+    fetchUsers();
+  }, []);
+
   return (
     <ListGroup variant="flush">
       {users.map((user, index) => (
