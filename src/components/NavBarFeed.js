@@ -14,25 +14,9 @@ class NavBarFeed extends React.Component {
         <img src={logo} alt="Logo" className="h-logo" />
         <div className="nav-right">
           <a href="/">
-            <img src={signOut} alt="SignOut" className="nav-icon" />
+            <img src={signOut} alt="SignOut" className="nav-icon-1" />
           </a>
-          <Dropdown>
-            <Dropdown.Toggle
-              className="custom-dropdown-toggle"
-              id="dropdown-basic"
-            >
-              <img
-                src={accountIcon}
-                alt="AccountDetails"
-                className="nav-icon"
-              />
-            </Dropdown.Toggle>
-
-            <Dropdown.Menu>
-              <Dropdown.Item href="#/action-1">Account</Dropdown.Item>
-              <Dropdown.Item href="#/action-2">Settings</Dropdown.Item>
-            </Dropdown.Menu>
-          </Dropdown>
+          <img src={accountIcon} alt="AccountDetails" className="nav-icon" />
         </div>
       </header>
     );

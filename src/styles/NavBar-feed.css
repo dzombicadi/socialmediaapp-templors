@@ -6,7 +6,6 @@
   background-color: var(--gray-color);
   display: flex;
   justify-content: space-between;
-  align-items: center;
 }
 
 .h-logo {
@@ -21,22 +20,20 @@
   cursor: pointer;
 }
 
+.nav-icon-1 {
+  width: 38px;
+  height: 38px;
+  cursor: pointer;
+  margin-top: 8px;
+}
+
+.nav-right {
+  display: inline-flex;
+  margin-top: 10px;
+}
+
 .nav-icon:nth-child(2) {
   width: 55px;
   height: 55px;
   margin-left: 10px;
-}
-
-.btn-flat {
-  background-color: purple;
-}
-
-.custom-dropdown-toggle {
-  background-color: var(--blue-color); /* Your desired color */
-  border-color: var(--gray-color); /* Match the border */
-}
-
-.custom-dropdown-toggle:hover {
-  background-color: #0056b3; /* Hover color */
-  border-color: #0056b3; /* Match the border */
 }

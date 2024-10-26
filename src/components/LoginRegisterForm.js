@@ -3,7 +3,7 @@ import "../global.css";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useEffect, useState } from "react";
-import { Form, Button, Container, Row, Col } from "react-bootstrap";
+import { Form, Button } from "react-bootstrap";
 
 import { Outlet, Link } from "react-router-dom";
 

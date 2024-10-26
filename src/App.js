@@ -15,8 +15,6 @@ import { AuthContext } from './contexts/AuthContext.tsx'
 function App() {
   return (
     <div className="App">
-      <AuthContext>
-      <NavBar></NavBar>
       <BrowserRouter>
         <Routes>
           <Route
