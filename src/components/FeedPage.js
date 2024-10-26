@@ -192,7 +192,7 @@ const FeedPage = () => {
                   variant="outline-secondary"
                   className="mr-2"
                 >
-                  Comment ({post.comments && post.comments.length})
+                  Comments ({post.comments && post.comments.length})
                 </Button>
                 <Button variant="outline-success">Share</Button>
               </Card.Footer>

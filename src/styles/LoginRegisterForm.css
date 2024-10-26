@@ -1,3 +1,10 @@
+* {
+  font-family: "Public Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: regular;
+  font-style: normal;
+}
+
 .login-wrapper {
   display: flex;
   justify-content: center;
